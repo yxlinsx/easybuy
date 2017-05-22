@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Exam">
+	
+	<!-- 插入出题策略表 -->
+	<insert id="saveExamStrategy" parameterType="com.easybuy.entity.ExamStrategy" useGeneratedKeys="true" keyProperty="id">
+		insert into t_exam_strategy
+		(question_count,total_score,cutoff_score,difficulty_setting) values
+		(#{questionCount},#{totalScore},#{cutoffScore},#{difficultySetting})
+	</insert>
+	
+	<!-- 插入大题 -->
+	<insert id="saveExamTopic" parameterType="com.easybuy.entity.ExamTopic" useGeneratedKeys="true" keyProperty="id" >
+	    insert into t_exam_topic (
+		    strategy_id ,      
+			name    ,    
+			question_type  ,
+			question_count,
+			single_score,
+			sort_number 
+		) values
+		(
+			#{strategyId} ,      
+			#{name}    ,    
+			#{questionType}  ,
+			#{questionCount},
+			#{singleScore},
+			#{sortNumber} 
+		)
+	</insert>
+	
+	<!-- 插入大题出题设置 -->
+	<insert id="saveExamTopicDetails" parameterType="map" >
+	    insert into t_exam_topic_detail (
+		    topic_id ,      
+			knowledge_id    ,    
+			question_count  
+		) values
+	    <foreach collection="list" item="item" separator="," >  
+		(
+			#{topicId} ,      
+			#{item.knowledgeId}    ,    
+			#{item.questionCount}  
+		)
+		</foreach>
+	</insert>
+	
+	<!-- 插入出题策略与题库关联表 -->
+	<insert id="saveExamStrategyQuestionBank" parameterType="map" >
+	    insert into t_r_exam_strategy_and_question_bank (
+		    strategy_id ,      
+			question_bank_id 
+		)  values
+		<foreach collection="list" item="item" separator="," >  
+		(
+			#{strategyId} ,      
+			#{item.id} 
+		)
+		</foreach>
+	</insert>	
+	
+</mapper>
